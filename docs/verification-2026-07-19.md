@@ -19,9 +19,11 @@ build:    vite production build passed
 
 ## Deployment status
 
-- Render Blueprint configuration: prepared in `render.yaml`.
+- Render Blueprint configuration: deployed from `render.yaml`.
 - Docker local build: not run because Docker is not installed in this workspace.
-- Public URL: pending Render account authorization and first deployment.
+- Public URL: `https://stratguard-ai.onrender.com`.
+- Public health check: `https://stratguard-ai.onrender.com/api/health` returned HTTP 200 with `{"status":"ok","product":"StratGuard AI"}`.
+- Public root-route check: `https://stratguard-ai.onrender.com/` returned HTTP 200.
 - API key: intentionally not configured. The no-key flow and Codex review-packet export remain available.
 
 ## Remaining media

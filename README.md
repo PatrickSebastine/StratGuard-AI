@@ -75,6 +75,10 @@ The repository includes a Dockerfile and `render.yaml` for a single-service Rend
 
 Do not set `OPENAI_API_KEY` unless you intentionally want usage-based API billing. The Codex review-packet export works without it.
 
+### Live demo
+
+The current public no-key deployment is [stratguard-ai.onrender.com](https://stratguard-ai.onrender.com). Render's free plan can spin the service down after inactivity, so allow a short warm-up before the first request.
+
 ## Codex contribution
 
 Codex accelerated the repository design, API contracts, deterministic testing workflow, frontend implementation, and documentation.

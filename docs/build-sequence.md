@@ -22,11 +22,11 @@ This is the single execution checklist for the judge-ready release. Check an ite
 
 ## 3. Public deployment
 
-- [ ] Select and authorize a hosting provider.
-- [ ] Deploy the FastAPI backend with the API audit disabled unless an API key is deliberately configured.
-- [ ] Deploy the Vite frontend with `VITE_API_URL` set to the public backend URL.
-- [ ] Run the complete no-key judge flow on the public URL.
-- [ ] Save the public frontend and backend URLs.
+- [x] Select and authorize a hosting provider.
+- [x] Deploy the combined FastAPI and Vite service with the API audit disabled.
+- [x] Serve the Vite frontend from the public FastAPI service.
+- [x] Run the public no-key health and root-route checks.
+- [x] Save the public URL: `https://stratguard-ai.onrender.com`.
 
 ## 4. Devpost submission
 
