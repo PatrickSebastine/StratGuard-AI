@@ -34,3 +34,14 @@ def test_allows_vite_frontend_origin() -> None:
     )
 
     assert response.headers["access-control-allow-origin"] == "http://localhost:5173"
+
+
+def test_completed_run_can_be_exported_as_markdown() -> None:
+    created = client.post("/api/backtests", json={"strategy": {}})
+    run_id = created.json()["run_id"]
+
+    report = client.get(f"/api/backtests/{run_id}/report?format=markdown")
+
+    assert report.status_code == 200
+    assert report.headers["content-type"].startswith("text/markdown")
+    assert "# StratGuard AI Audit Report" in report.text

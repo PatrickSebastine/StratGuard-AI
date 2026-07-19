@@ -2,6 +2,7 @@ import { useState } from "react";
 
 type Finding = { severity: string; code: string; message: string };
 type Result = {
+  run_id: string;
   dataset: string;
   metrics: Record<string, number>;
   findings: Finding[];
@@ -48,6 +49,7 @@ export default function App() {
         {Object.entries(result.metrics).map(([name, value]) => <div className="metric" key={name}><span>{name.replaceAll("_", " ")}</span><strong>{typeof value === "number" ? value.toLocaleString() : value}</strong></div>)}
       </section>
       <section className="panel"><h2>Credibility findings</h2><ul>{result.findings.map((finding) => <li key={finding.code} className={finding.severity}><strong>{finding.severity}</strong><span>{finding.message}</span></li>)}</ul></section>
+      <section className="panel"><h2>Reproducible report</h2><p>Export the exact strategy assumptions, deterministic metrics, and credibility findings.</p><a className="report-link" href={`${API}/api/backtests/${result.run_id}/report?format=markdown`} target="_blank" rel="noreferrer">Download Markdown report</a></section>
       <section className="panel"><h2>GPT-5.6 audit</h2><p>Optional structured audit. Configure <code>OPENAI_API_KEY</code> to enable model-assisted specification review and evidence-based findings. The deterministic result remains available without it.</p></section>
     </section>}
   </main>;
