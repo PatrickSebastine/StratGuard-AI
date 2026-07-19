@@ -1,6 +1,8 @@
 import { useState } from "react";
 
 type Finding = { severity: string; code: string; message: string };
+type AuditFinding = { severity: string; title: string; evidence: string; recommendation: string };
+type Audit = { confidence: string; findings: AuditFinding[]; limitations: string[]; recommended_experiments: string[]; what_this_does_not_prove: string };
 type Result = {
   run_id: string;
   dataset: string;
@@ -16,6 +18,8 @@ export default function App() {
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [audit, setAudit] = useState<Audit | null>(null);
+  const [auditLoading, setAuditLoading] = useState(false);
 
   async function runDemo() {
     setLoading(true);
@@ -24,10 +28,27 @@ export default function App() {
       const response = await fetch(`${API}/api/backtests`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ strategy: {} }) });
       if (!response.ok) throw new Error("The offline backtest could not be completed.");
       setResult(await response.json());
+      setAudit(null);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Unexpected request failure.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function runAiAudit() {
+    if (!result) return;
+    setAuditLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API}/api/backtests/${result.run_id}/audit`, { method: "POST" });
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.message ?? "The GPT-5.6 audit could not be completed.");
+      setAudit(body);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Unexpected audit failure.");
+    } finally {
+      setAuditLoading(false);
     }
   }
 
@@ -50,7 +71,7 @@ export default function App() {
       </section>
       <section className="panel"><h2>Credibility findings</h2><ul>{result.findings.map((finding) => <li key={finding.code} className={finding.severity}><strong>{finding.severity}</strong><span>{finding.message}</span></li>)}</ul></section>
       <section className="panel"><h2>Reproducible report</h2><p>Export the exact strategy assumptions, deterministic metrics, and credibility findings.</p><a className="report-link" href={`${API}/api/backtests/${result.run_id}/report?format=markdown`} target="_blank" rel="noreferrer">Download Markdown report</a></section>
-      <section className="panel"><h2>GPT-5.6 audit</h2><p>Optional structured audit. Configure <code>OPENAI_API_KEY</code> to enable model-assisted specification review and evidence-based findings. The deterministic result remains available without it.</p></section>
+      <section className="panel"><h2>GPT-5.6 audit</h2><p>Optional structured audit. It receives this deterministic run only and cannot place trades or add external market claims.</p><button onClick={runAiAudit} disabled={auditLoading}>{auditLoading ? "Reviewing evidence..." : "Run GPT-5.6 audit"}</button>{audit && <div className="audit-result"><p><strong>Confidence:</strong> {audit.confidence}</p><p>{audit.what_this_does_not_prove}</p><ul>{audit.findings.map((finding) => <li key={finding.title}><strong>{finding.title}</strong><span>{finding.recommendation}</span></li>)}</ul></div>}</section>
     </section>}
   </main>;
 }

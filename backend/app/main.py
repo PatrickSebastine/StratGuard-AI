@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel
 
+from .ai import OpenAIConfigurationError, audit_run
 from .engine import run_backtest
 from .metrics import calculate_metrics
 from .models import Candle, Dataset, StrategySpec
@@ -73,3 +74,20 @@ def export_report(run_id: str, format: str = "markdown") -> Response:
     if format == "markdown":
         return Response(render_markdown(run), media_type="text/markdown")
     raise HTTPException(status_code=422, detail="format must be markdown or json")
+
+
+@app.post("/api/backtests/{run_id}/audit")
+def create_ai_audit(run_id: str) -> dict:
+    run = store.get(run_id)
+    if run is None:
+        raise HTTPException(status_code=404, detail="Backtest run not found")
+    try:
+        return audit_run(run).model_dump()
+    except OpenAIConfigurationError:
+        return JSONResponse(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            content={
+                "code": "openai_not_configured",
+                "message": "Configure OPENAI_API_KEY to enable the optional GPT-5.6 audit.",
+            },
+        )

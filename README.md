@@ -15,6 +15,8 @@ Backtests can create false confidence when their rules are ambiguous, trades use
 - Next-candle execution to prevent same-candle look-ahead bias.
 - Position sizing, fees, slippage, and basic stop/target assumptions in the strategy schema.
 - Metric cards and credibility findings.
+- Saved Markdown and JSON reports for each completed run.
+- Optional GPT-5.6 structured audit of a saved run's deterministic evidence.
 - React dashboard that works without exchange accounts, live market data, or an OpenAI API key.
 
 ## Safety boundary
@@ -28,7 +30,7 @@ StratGuard AI is not financial advice, a profitability predictor, or trading exe
 ```powershell
 cd backend
 python -m venv .venv
-.\.venv\Scripts\python -m pip install fastapi pydantic pytest httpx uvicorn pandas numpy
+.\.venv\Scripts\python -m pip install -e .
 .\.venv\Scripts\python -m uvicorn app.main:app --reload
 ```
 
@@ -53,9 +55,15 @@ npm test -- --run
 npm run build
 ```
 
-## Codex and GPT-5.6
+## Optional GPT-5.6 audit
 
-Codex accelerated the repository design, API contracts, deterministic testing workflow, and frontend implementation. The planned GPT-5.6 layer uses structured outputs to translate constrained natural-language strategy descriptions into a typed specification and to audit stored deterministic evidence. It must not calculate price data, performance, or trade outcomes.
+Set `OPENAI_API_KEY` before starting the backend to enable `POST /api/backtests/{run_id}/audit`. The endpoint uses the Responses API structured-output helper with a Pydantic schema and `gpt-5.6`. It receives only the saved strategy, metrics, findings, and trades from that deterministic run. The model cannot calculate market data, alter results, connect to an exchange, or place trades.
+
+Without a key, the dashboard and deterministic reports remain fully available. The audit endpoint returns `503` with `openai_not_configured` so the UI never implies an AI review happened when it did not.
+
+## Codex contribution
+
+Codex accelerated the repository design, API contracts, deterministic testing workflow, frontend implementation, and documentation.
 
 ## Documentation
 

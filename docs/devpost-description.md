@@ -18,4 +18,4 @@ The key challenge was maintaining an honest boundary between AI reasoning and de
 
 ## What's next
 
-Add structured GPT-5.6 calls, saved comparisons, report export, CSV import, more constrained strategy families, and sensitivity/regime analysis while preserving the research-only safety boundary.
+Add saved run comparisons, CSV import, more constrained strategy families, and sensitivity/regime analysis while preserving the research-only safety boundary.
