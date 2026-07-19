@@ -1,0 +1,18 @@
+[project]
+name = "stratguard-ai"
+version = "0.1.0"
+description = "A research-only strategy backtesting and audit workspace."
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115",
+  "numpy>=2.0",
+  "pandas>=2.2",
+  "pydantic>=2.9",
+  "uvicorn[standard]>=0.30",
+]
+
+[dependency-groups]
+dev = ["httpx>=0.28", "pytest>=8.3"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
