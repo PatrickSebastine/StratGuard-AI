@@ -5,6 +5,7 @@ from uuid import uuid4
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from .ai import OpenAIConfigurationError, audit_run
@@ -99,3 +100,7 @@ def create_ai_audit(run_id: str) -> dict:
                 "message": "Configure OPENAI_API_KEY to enable the optional GPT-5.6 audit.",
             },
         )
+
+
+static_dir = Path(__file__).resolve().parent / "static"
+app.mount("/", StaticFiles(directory=static_dir, html=True, check_dir=False), name="frontend")

@@ -65,6 +65,16 @@ Without a key, the dashboard and deterministic reports remain fully available. T
 
 Codex subscription sign-in authorizes the Codex desktop app, CLI, and IDE extension, not a separate web application's backend. StratGuard therefore includes an **Export Codex review packet** option. Open the generated Markdown in Codex and ask it to perform the included evidence-only review. This uses your existing Codex session while keeping the resulting review explicitly manual and reproducible.
 
+## Deploy
+
+The repository includes a Dockerfile and `render.yaml` for a single-service Render deployment. The container builds the React dashboard and serves it through FastAPI, keeping the no-key demo available at the same public URL as the API.
+
+1. Sign in to [Render](https://render.com/) and create a Blueprint from this GitHub repository.
+2. Review the generated `stratguard-ai` web service, then deploy it on the free plan.
+3. Open `https://<your-service>.onrender.com/api/health` and then the root URL to run the no-key judge flow.
+
+Do not set `OPENAI_API_KEY` unless you intentionally want usage-based API billing. The Codex review-packet export works without it.
+
 ## Codex contribution
 
 Codex accelerated the repository design, API contracts, deterministic testing workflow, frontend implementation, and documentation.
@@ -75,6 +85,8 @@ Codex accelerated the repository design, API contracts, deterministic testing wo
 - [Implementation plan](docs/superpowers/plans/2026-07-19-stratguard-ai-mvp.md)
 - [Demo script](docs/demo-script.md)
 - [Devpost description](docs/devpost-description.md)
+- [Judge-ready build sequence](docs/build-sequence.md)
+- [Verification record](docs/verification-2026-07-19.md)
 
 ## Contributors
 
