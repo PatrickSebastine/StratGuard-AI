@@ -21,3 +21,14 @@ def test_audit_rejects_unknown_backtest_run() -> None:
     response = client.post("/api/backtests/not-a-run/audit")
 
     assert response.status_code == 404
+
+
+def test_completed_run_can_export_a_codex_review_packet() -> None:
+    created = client.post("/api/backtests", json={"strategy": {}})
+    run_id = created.json()["run_id"]
+
+    response = client.get(f"/api/backtests/{run_id}/codex-review-packet")
+
+    assert response.status_code == 200
+    assert "# StratGuard AI Codex Review Packet" in response.text
+    assert "does not prove" in response.text

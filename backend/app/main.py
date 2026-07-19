@@ -12,7 +12,7 @@ from .engine import run_backtest
 from .metrics import calculate_metrics
 from .models import Candle, Dataset, StrategySpec
 from .validation import validate_run
-from .reports import render_markdown
+from .reports import render_codex_review_packet, render_markdown
 from .store import RunStore
 
 
@@ -74,6 +74,14 @@ def export_report(run_id: str, format: str = "markdown") -> Response:
     if format == "markdown":
         return Response(render_markdown(run), media_type="text/markdown")
     raise HTTPException(status_code=422, detail="format must be markdown or json")
+
+
+@app.get("/api/backtests/{run_id}/codex-review-packet")
+def export_codex_review_packet(run_id: str) -> Response:
+    run = store.get(run_id)
+    if run is None:
+        raise HTTPException(status_code=404, detail="Backtest run not found")
+    return Response(render_codex_review_packet(run), media_type="text/markdown")
 
 
 @app.post("/api/backtests/{run_id}/audit")

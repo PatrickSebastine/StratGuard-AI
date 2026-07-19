@@ -61,6 +61,10 @@ Set `OPENAI_API_KEY` before starting the backend to enable `POST /api/backtests/
 
 Without a key, the dashboard and deterministic reports remain fully available. The audit endpoint returns `503` with `openai_not_configured` so the UI never implies an AI review happened when it did not.
 
+### Using your Codex subscription without API credit
+
+Codex subscription sign-in authorizes the Codex desktop app, CLI, and IDE extension, not a separate web application's backend. StratGuard therefore includes an **Export Codex review packet** option. Open the generated Markdown in Codex and ask it to perform the included evidence-only review. This uses your existing Codex session while keeping the resulting review explicitly manual and reproducible.
+
 ## Codex contribution
 
 Codex accelerated the repository design, API contracts, deterministic testing workflow, frontend implementation, and documentation.
